@@ -1,8 +1,8 @@
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '30 5,17 * * *'
-  
+    - cron: "30 5,17 * * *"
+
 jobs:
   mirror_tags:
     name: Tag ${{ matrix.repo }}
@@ -59,7 +59,7 @@ jobs:
           tag: ${{ steps.tagfetch.outputs.tag }}
           log-directives: flakehub_push=trace
           logger: pretty
-          
+
   rolling:
     name: Branch ${{ matrix.repo }}#${{ matrix.branch }}
     strategy:
@@ -81,6 +81,7 @@ jobs:
             branch: main
           - repo: nix-community/home-manager
             branch: master
+            run-on: UbuntuLatest32Cores128G
           - repo: nix-community/impermanence
             branch: master
           - repo: nix-community/naersk
@@ -120,7 +121,7 @@ jobs:
             branch: release-23.05
             rolling-minor: 2305
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.run-on || 'ubuntu-latest' }}
     permissions:
       contents: write # In order to upload artifacts to GitHub releases
       id-token: write # In order to request a JWT for AWS auth
